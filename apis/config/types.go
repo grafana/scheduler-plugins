@@ -303,10 +303,10 @@ type PowerModel struct {
 
 // LooseBinPackArgs holds arguments used to configure LooseBinPack plugin.
 type LooseBinPackArgs struct {
-	metav1.TypeMeta `json:",inline"`
+	metav1.TypeMeta
 
 	// CPU Utilization Threshold in percentage (0-100)
-	CpuThresholdPercent int64 `json:"cpuThresholdPercent,omitempty"`
+	CpuThresholdPercent int64
 	// Memory Utilization Threshold in percentage (0-100)
-	MemoryThresholdPercent int64 `json:"memoryThresholdPercent,omitempty"`
+	MemoryThresholdPercent int64
 }

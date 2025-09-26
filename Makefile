@@ -33,7 +33,7 @@ RELEASE_IMAGE:=kube-scheduler:$(RELEASE_VERSION)
 RELEASE_CONTROLLER_IMAGE:=controller:$(RELEASE_VERSION)
 GO_BASE_IMAGE?=golang:$(GO_VERSION)
 DISTROLESS_BASE_IMAGE?=gcr.io/distroless/static:nonroot
-EXTRA_ARGS=""
+EXTRA_ARGS?=""
 
 # VERSION is the scheduler's version
 #

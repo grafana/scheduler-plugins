@@ -299,7 +299,6 @@ type PowerModel struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +k8s:defaulter-gen=true
 
 // LooseBinPackArgs holds arguments used to configure LooseBinPack plugin.
 type LooseBinPackArgs struct {
