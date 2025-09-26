@@ -1,0 +1,34 @@
+apiVersion: kubescheduler.config.k8s.io/v1
+kind: KubeSchedulerConfiguration
+leaderElection:
+  leaderElect: true
+  resourceName: optimize-utilization-scheduler-2
+  resourceNamespace: kube-scheduling
+profiles:
+  - pluginConfig:
+      - args:
+          apiVersion: kubescheduler.config.k8s.io/v1
+          kind: NodeResourcesFitArgs
+          scoringStrategy:
+            resources:
+              - name: cpu
+                weight: 4
+              - name: memory
+                weight: 1
+            type: MostAllocated
+        name: NodeResourcesFit
+      - args:
+          apiVersion: kubescheduler.config.k8s.io/v1
+          kind: LooseBinPackArgs
+          cpuThresholdPercent: 85
+          memoryThresholdPercent: 85
+        name: LooseBinPack
+    plugins:
+      filter:
+        enabled:
+          - name: LooseBinPack
+      score:
+        enabled:
+          - name: NodeResourcesFit
+            weight: 1
+    schedulerName: optimize-utilization-scheduler-2
