@@ -298,3 +298,15 @@ type PowerModel struct {
 	// Power = K0 + K1 * e ^(K2 * x) : where x is utilisation
 	// Idle power of node will be K0 + K1
 }
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// LooseBinPackArgs holds arguments used to configure LooseBinPack plugin.
+type LooseBinPackArgs struct {
+	metav1.TypeMeta
+
+	// CPU Utilization Threshold in percentage (0-100)
+	CpuThresholdPercent int64
+	// Memory Utilization Threshold in percentage (0-100)
+	MemoryThresholdPercent int64
+}

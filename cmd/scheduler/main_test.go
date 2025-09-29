@@ -36,6 +36,7 @@ import (
 
 	"sigs.k8s.io/scheduler-plugins/pkg/capacityscheduling"
 	"sigs.k8s.io/scheduler-plugins/pkg/coscheduling"
+	"sigs.k8s.io/scheduler-plugins/pkg/loosebinpack"
 	"sigs.k8s.io/scheduler-plugins/pkg/networkaware/networkoverhead"
 	"sigs.k8s.io/scheduler-plugins/pkg/networkaware/topologicalsort"
 	"sigs.k8s.io/scheduler-plugins/pkg/noderesources"
@@ -428,6 +429,31 @@ profiles:
 		t.Fatal(err)
 	}
 
+	// LooseBinPack plugin config
+	looseBinPackConfig := filepath.Join(tmpDir, "looseBinPack.yaml")
+	if err := os.WriteFile(looseBinPackConfig, []byte(fmt.Sprintf(`
+apiVersion: kubescheduler.config.k8s.io/v1
+kind: KubeSchedulerConfiguration
+clientConnection:
+  kubeconfig: "%s"
+profiles:
+- plugins:
+    filter:
+      enabled:
+      - name: LooseBinPack
+      disabled:
+      - name: "*"
+  pluginConfig:
+  - name: LooseBinPack
+    args:
+      apiVersion: kubescheduler.config.k8s.io/v1
+      kind: LooseBinPackArgs
+      cpuThresholdPercent: 90
+      memoryThresholdPercent: 90
+`, configKubeconfig)), os.FileMode(0600)); err != nil {
+		t.Fatal(err)
+	}
+
 	// multiple profiles config
 	multiProfilesConfig := filepath.Join(tmpDir, "multi-profiles.yaml")
 	if err := os.WriteFile(multiProfilesConfig, []byte(fmt.Sprintf(`
@@ -721,6 +747,25 @@ profiles:
 					PostFilter: defaults.ExpandedPluginsV1.PostFilter,
 					PreScore:   defaults.ExpandedPluginsV1.PreScore,
 					Score:      config.PluginSet{Enabled: []config.Plugin{{Name: networkoverhead.Name, Weight: 1}}},
+					Reserve:    defaults.ExpandedPluginsV1.Reserve,
+					PreBind:    defaults.ExpandedPluginsV1.PreBind,
+				},
+			},
+		},
+		{
+			name:            "single profile config - LooseBinPack with args",
+			flags:           []string{"--config", looseBinPackConfig},
+			registryOptions: []app.Option{app.WithPlugin(loosebinpack.Name, loosebinpack.New)},
+			wantPlugins: map[string]*config.Plugins{
+				"default-scheduler": {
+					PreEnqueue: defaults.ExpandedPluginsV1.PreEnqueue,
+					QueueSort:  defaults.ExpandedPluginsV1.QueueSort,
+					Bind:       defaults.ExpandedPluginsV1.Bind,
+					PreFilter:  defaults.ExpandedPluginsV1.PreFilter,
+					Filter:     config.PluginSet{Enabled: []config.Plugin{{Name: loosebinpack.Name}}},
+					PostFilter: defaults.ExpandedPluginsV1.PostFilter,
+					PreScore:   defaults.ExpandedPluginsV1.PreScore,
+					Score:      defaults.ExpandedPluginsV1.Score,
 					Reserve:    defaults.ExpandedPluginsV1.Reserve,
 					PreBind:    defaults.ExpandedPluginsV1.PreBind,
 				},

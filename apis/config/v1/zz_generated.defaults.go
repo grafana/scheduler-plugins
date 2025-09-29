@@ -33,6 +33,7 @@ func RegisterDefaults(scheme *runtime.Scheme) error {
 	scheme.AddTypeDefaultingFunc(&LoadVariationRiskBalancingArgs{}, func(obj interface{}) {
 		SetObjectDefaults_LoadVariationRiskBalancingArgs(obj.(*LoadVariationRiskBalancingArgs))
 	})
+	scheme.AddTypeDefaultingFunc(&LooseBinPackArgs{}, func(obj interface{}) { SetObjectDefaults_LooseBinPackArgs(obj.(*LooseBinPackArgs)) })
 	scheme.AddTypeDefaultingFunc(&LowRiskOverCommitmentArgs{}, func(obj interface{}) { SetObjectDefaults_LowRiskOverCommitmentArgs(obj.(*LowRiskOverCommitmentArgs)) })
 	scheme.AddTypeDefaultingFunc(&NetworkOverheadArgs{}, func(obj interface{}) { SetObjectDefaults_NetworkOverheadArgs(obj.(*NetworkOverheadArgs)) })
 	scheme.AddTypeDefaultingFunc(&NodeResourceTopologyMatchArgs{}, func(obj interface{}) {
@@ -54,6 +55,10 @@ func SetObjectDefaults_CoschedulingArgs(in *CoschedulingArgs) {
 
 func SetObjectDefaults_LoadVariationRiskBalancingArgs(in *LoadVariationRiskBalancingArgs) {
 	SetDefaults_LoadVariationRiskBalancingArgs(in)
+}
+
+func SetObjectDefaults_LooseBinPackArgs(in *LooseBinPackArgs) {
+	SetDefaults_LooseBinPackArgs(in)
 }
 
 func SetObjectDefaults_LowRiskOverCommitmentArgs(in *LowRiskOverCommitmentArgs) {

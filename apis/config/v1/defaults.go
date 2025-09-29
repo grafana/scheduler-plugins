@@ -250,3 +250,16 @@ func SetDefaults_SySchedArgs(obj *SySchedArgs) {
 		obj.DefaultProfileName = &DefaultSySchedProfileName
 	}
 }
+
+// SetDefaults_LooseBinPackArgs sets the default parameters for the LooseBinPack plugin
+func SetDefaults_LooseBinPackArgs(obj *LooseBinPackArgs) {
+	if obj.CpuThresholdPercent == 0 {
+		defaultCpuThresholdPercent := int64(85)
+		obj.CpuThresholdPercent = defaultCpuThresholdPercent
+	}
+
+	if obj.MemoryThresholdPercent == 0 {
+		defaultMemoryThresholdPercent := int64(85)
+		obj.MemoryThresholdPercent = defaultMemoryThresholdPercent
+	}
+}
